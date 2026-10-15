@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/data_provider.dart';
+import '../widgets/app_page_route.dart';
 import 'laborer_detail_screen.dart';
 
 /// Customer's saved laborers, with remove (heart toggle).
@@ -62,7 +63,7 @@ class FavoritesScreen extends StatelessWidget {
                       },
                     ),
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context).push(AppPageRoute(
                           builder: (_) =>
                               LaborerDetailScreen(laborId: fav.laborId)));
                     },

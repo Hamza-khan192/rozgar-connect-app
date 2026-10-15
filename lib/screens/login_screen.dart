@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 import '../providers/auth_provider.dart';
+import '../widgets/app_page_route.dart';
 import 'root_nav.dart';
 import 'signup_screen.dart';
 
@@ -37,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
     } else {
       next = const CustomerRoot();
     }
-    navigator.pushReplacement(MaterialPageRoute(builder: (_) => next));
+    navigator.pushReplacement(AppPageRoute(builder: (_) => next));
   }
 
   Future<void> _submit() async {
@@ -121,16 +122,34 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => const SignupScreen()));
+                    Navigator.of(context).push(
+                        AppPageRoute(builder: (_) => const SignupScreen()));
                   },
                   child: const Text("Don't have an account? Sign up"),
                 ),
                 const SizedBox(height: 12),
-                Text(
-                  'Demo: 03331234567 / 123456 (customer)',
-                  style: TextStyle(
-                      fontSize: 12, color: theme.colorScheme.secondary),
+                InkWell(
+                  onTap: () {
+                    _phoneCtrl.text = '03330000000';
+                    _passCtrl.text = '123456';
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: theme.colorScheme.outlineVariant),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      'Demo admin — tap to fill\n03330000000 / 123456',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: theme.colorScheme.secondary),
+                    ),
+                  ),
                 ),
               ],
             ),

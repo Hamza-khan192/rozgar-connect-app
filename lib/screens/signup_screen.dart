@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../models/user.dart';
 import '../providers/auth_provider.dart';
+import '../widgets/app_page_route.dart';
 import 'root_nav.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -39,7 +40,7 @@ class _SignupScreenState extends State<SignupScreen> {
     } else {
       next = const CustomerRoot();
     }
-    navigator.pushReplacement(MaterialPageRoute(builder: (_) => next));
+    navigator.pushReplacement(AppPageRoute(builder: (_) => next));
   }
 
   Future<void> _submit() async {

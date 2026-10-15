@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../models/laborer_detail.dart';
 import '../models/review.dart';
 import '../providers/data_provider.dart';
+import '../widgets/app_page_route.dart';
 import '../widgets/rating_stars.dart';
 import '../widgets/section_title.dart';
 import '../widgets/status_chip.dart';
@@ -164,10 +165,17 @@ class _LaborerDetailScreenState extends State<LaborerDetailScreen> {
                   child: Row(
                     children: [
                       IconButton(
-                        icon: Icon(
-                          fav ? Icons.favorite : Icons.favorite_border,
-                          color: fav ? Colors.red : null,
-                          size: 30,
+                        icon: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          transitionBuilder: (child, animation) =>
+                              ScaleTransition(
+                                  scale: animation, child: child),
+                          child: Icon(
+                            fav ? Icons.favorite : Icons.favorite_border,
+                            key: ValueKey(fav),
+                            color: fav ? Colors.red : null,
+                            size: 30,
+                          ),
                         ),
                         tooltip: fav
                             ? 'Remove from favorites'
@@ -186,7 +194,7 @@ class _LaborerDetailScreenState extends State<LaborerDetailScreen> {
                           onPressed: profile.isAvailable
                               ? () {
                                   Navigator.of(context).push(
-                                      MaterialPageRoute(
+                                      AppPageRoute(
                                           builder: (_) => PostJobScreen(
                                               laborId: profile.laborId)));
                                 }

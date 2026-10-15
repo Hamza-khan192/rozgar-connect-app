@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/data_provider.dart';
+import '../widgets/app_page_route.dart';
 import '../widgets/laborer_card.dart';
 import 'laborer_detail_screen.dart';
 import 'post_job_screen.dart';
@@ -43,8 +45,8 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             icon: const Icon(Icons.add),
             tooltip: 'Post a job',
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => const PostJobScreen()));
+              Navigator.of(context).push(
+                  AppPageRoute(builder: (_) => const PostJobScreen()));
             },
           ),
         ],
@@ -124,7 +126,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         itemBuilder: (context, i) {
           final profile = data.laborers[i];
           final detail = data.detailCache[profile.laborId];
-          return LaborerCard(
+          final card = LaborerCard(
             name: data.laborerName(profile),
             skillNames: data.skillNamesFor(profile.laborId),
             avgRating: detail?.avgRating ?? 0,
@@ -133,7 +135,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             availability: profile.availabilityStatus,
             isFavorite: data.isFav(profile.laborId),
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
+              Navigator.of(context).push(AppPageRoute(
                   builder: (_) =>
                       LaborerDetailScreen(laborId: profile.laborId)));
             },
@@ -142,6 +144,14 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                   context.read<DataProvider>().toggleFavorite(profile.laborId));
             },
           );
+          // Staggered entrance for the first items; plain afterwards
+          // so scrolling stays smooth.
+          if (i >= 10) return card;
+          return card
+              .animate(delay: Duration(milliseconds: 70 * i))
+              .fadeIn(duration: 350.ms)
+              .slideY(
+                  begin: 0.12, end: 0, duration: 350.ms, curve: Curves.easeOut);
         },
       ),
     );

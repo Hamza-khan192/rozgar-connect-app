@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
+import '../widgets/app_page_route.dart';
 import 'login_screen.dart';
 
 /// Shows the signed-in user's info with a logout button.
@@ -13,7 +14,7 @@ class AccountScreen extends StatelessWidget {
     final navigator = Navigator.of(context);
     await auth.logout();
     navigator.pushReplacement(
-        MaterialPageRoute(builder: (_) => const LoginScreen()));
+        AppPageRoute(builder: (_) => const LoginScreen()));
   }
 
   @override
