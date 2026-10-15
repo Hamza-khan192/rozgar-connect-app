@@ -24,9 +24,28 @@ class FavoritesScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Favorites')),
       body: data.favorites.isEmpty
-          ? const Center(
-              child: Text(
-                  'No favorites yet.\nTap the heart on a laborer to save them.'),
+          ? Center(
+              child: Padding(
+                padding: const EdgeInsets.all(32),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.favorite_border,
+                        size: 64, color: theme.colorScheme.outline),
+                    const SizedBox(height: 16),
+                    const Text('No favorites yet',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Tap the heart on any laborer to save them here for later.',
+                      textAlign: TextAlign.center,
+                      style:
+                          TextStyle(color: theme.colorScheme.secondary),
+                    ),
+                  ],
+                ),
+              ),
             )
           : ListView.builder(
               itemCount: data.favorites.length,

@@ -34,6 +34,7 @@ class DataProvider extends ChangeNotifier {
   LaborProfile? myProfile;
   List<int> mySkillIds = [];
   LocationEntry? myLocation;
+  Map<int, LocationEntry> latestLocations = {};
   String? lastError;
   bool laborersLoaded = false;
 
@@ -54,6 +55,7 @@ class DataProvider extends ChangeNotifier {
     myProfile = null;
     mySkillIds = [];
     myLocation = null;
+    latestLocations = {};
     lastError = null;
     laborersLoaded = false;
     _query = '';
@@ -229,6 +231,11 @@ class DataProvider extends ChangeNotifier {
     myLocation = entry;
     notifyListeners();
     return entry;
+  }
+
+  Future<void> loadLatestLocations() async {
+    latestLocations = await repo.getLatestLocations();
+    notifyListeners();
   }
 
   Future<void> deleteUser(int userId) async {

@@ -48,7 +48,28 @@ class _JobList extends StatelessWidget {
     final jobs = data.jobs.where((j) => j.status == status).toList()
       ..sort((a, b) => b.jobId.compareTo(a.jobId));
     if (jobs.isEmpty) {
-      return const Center(child: Text('No jobs here'));
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.work_outline,
+                  size: 64,
+                  color: Theme.of(context).colorScheme.outline),
+              const SizedBox(height: 16),
+              const Text('No jobs here yet',
+                  style:
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 8),
+              const Text(
+                'Jobs you post or accept will show up here.',
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      );
     }
     return RefreshIndicator(
       onRefresh: () => data.refreshAll(),

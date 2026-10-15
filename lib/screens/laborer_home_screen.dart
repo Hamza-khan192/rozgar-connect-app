@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -253,17 +253,37 @@ class LaborerHomeScreen extends StatelessWidget {
     }
   }
 
+  /// Shares the laborer's real GPS position as their live location,
+  /// so customers can find them on the map.
   Future<void> _updateLocation(BuildContext context, DataProvider data) async {
     final messenger = ScaffoldMessenger.of(context);
     try {
-      // Demo coordinates near Mardan with a tiny random offset.
-      final rand = Random();
-      final lat = 34.2019 + (rand.nextDouble() - 0.5) * 0.02;
-      final lng = 72.0525 + (rand.nextDouble() - 0.5) * 0.02;
-      await data.updateLocation(latitude: lat, longitude: lng);
-      messenger.showSnackBar(SnackBar(
-          content: Text(
-              'Location saved: ${lat.toStringAsFixed(4)}, ${lng.toStringAsFixed(4)}')));
+      if (!await Geolocator.isLocationServiceEnabled()) {
+        messenger.showSnackBar(const SnackBar(
+            content: Text('Location service off hai — pehle on karo')));
+        return;
+      }
+      var perm = await Geolocator.checkPermission();
+      if (perm == LocationPermission.denied) {
+        perm = await Geolocator.requestPermission();
+      }
+      if (perm == LocationPermission.denied ||
+          perm == LocationPermission.deniedForever) {
+        messenger.showSnackBar(const SnackBar(
+            content: Text('Location permission do — Settings mein allow karo')));
+        return;
+      }
+      messenger.showSnackBar(const SnackBar(
+          content: Text('Live location li ja rahi hai…'),
+          duration: Duration(seconds: 2)));
+      final pos = await Geolocator.getCurrentPosition(
+          locationSettings:
+              const LocationSettings(accuracy: LocationAccuracy.high));
+      await data.updateLocation(
+          latitude: pos.latitude, longitude: pos.longitude);
+      if (!context.mounted) return;
+      messenger.showSnackBar(const SnackBar(
+          content: Text('Live location save ho gayi ✅ — customers ab map pe dekh sakte hain')));
     } catch (e) {
       messenger.showSnackBar(SnackBar(
           content: Text(e.toString().replaceFirst('Exception: ', ''))));

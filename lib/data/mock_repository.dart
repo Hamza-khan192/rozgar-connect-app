@@ -459,6 +459,17 @@ class MockRepository implements AppRepository {
     return latest;
   }
 
+  @override
+  Future<Map<int, LocationEntry>> getLatestLocations() async {
+    await _tick();
+    final Map<int, LocationEntry> out = {};
+    for (final l in _locations) {
+      final cur = out[l.laborId];
+      if (cur == null || l.locationId > cur.locationId) out[l.laborId] = l;
+    }
+    return out;
+  }
+
   // ---------------------------------------------------------------- users --
 
   @override

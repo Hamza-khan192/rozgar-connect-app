@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 /// Card used on the customer home screen and favorites screen.
 class LaborerCard extends StatelessWidget {
+  final int laborId;
   final String name;
   final List<String> skillNames;
   final double avgRating;
@@ -14,6 +15,7 @@ class LaborerCard extends StatelessWidget {
 
   const LaborerCard({
     super.key,
+    required this.laborId,
     required this.name,
     required this.skillNames,
     required this.avgRating,
@@ -44,14 +46,17 @@ class LaborerCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: theme.colorScheme.primaryContainer,
-                child: Text(
-                  _initials,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.onPrimaryContainer,
+              Hero(
+                tag: 'laborer-avatar-$laborId',
+                child: CircleAvatar(
+                  radius: 28,
+                  backgroundColor: theme.colorScheme.primaryContainer,
+                  child: Text(
+                    _initials,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onPrimaryContainer,
+                    ),
                   ),
                 ),
               ),

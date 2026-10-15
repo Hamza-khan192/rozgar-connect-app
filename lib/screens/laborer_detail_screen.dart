@@ -72,15 +72,18 @@ class _LaborerDetailScreenState extends State<LaborerDetailScreen> {
                         padding: const EdgeInsets.all(20),
                         child: Column(
                           children: [
-                            CircleAvatar(
-                              radius: 40,
-                              backgroundColor: theme.colorScheme.primary,
-                              child: Text(
-                                _initials(name),
-                                style: const TextStyle(
-                                    fontSize: 28,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
+                            Hero(
+                              tag: 'laborer-avatar-${profile.laborId}',
+                              child: CircleAvatar(
+                                radius: 40,
+                                backgroundColor: theme.colorScheme.primary,
+                                child: Text(
+                                  _initials(name),
+                                  style: const TextStyle(
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
                               ),
                             ),
                             const SizedBox(height: 12),

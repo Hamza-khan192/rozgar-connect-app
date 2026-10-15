@@ -386,6 +386,17 @@ class ApiRepository implements AppRepository {
     return LocationEntry.fromJson(_asMap(decoded));
   }
 
+  @override
+  Future<Map<int, LocationEntry>> getLatestLocations() async {
+    final laborers = await getLaborers();
+    final Map<int, LocationEntry> out = {};
+    for (final p in laborers) {
+      final loc = await getLatestLocation(p.laborId);
+      if (loc != null) out[p.laborId] = loc;
+    }
+    return out;
+  }
+
   // ---------------------------------------------------------------- users --
 
   @override

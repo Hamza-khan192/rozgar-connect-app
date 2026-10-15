@@ -1,14 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/auth_provider.dart';
 import '../providers/data_provider.dart';
+import '../widgets/app_page_route.dart';
 import '../widgets/status_chip.dart';
+import 'login_screen.dart';
 
 /// Admin dashboard: stat cards + tabs for Users and Jobs management.
 class AdminDashboardScreen extends StatelessWidget {
   final int initialTab;
 
   const AdminDashboardScreen({super.key, this.initialTab = 0});
+
+  Future<void> _confirmLogout(BuildContext context) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Logout?'),
+        content: const Text('Kya aap logout karna chahte hain?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: const Text('Nahi'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: const Text('Haan, logout'),
+          ),
+        ],
+      ),
+    );
+    if (confirm != true || !context.mounted) return;
+    await context.read<AuthProvider>().logout();
+    if (!context.mounted) return;
+    Navigator.of(context).pushReplacement(
+      AppPageRoute(builder: (_) => const LoginScreen()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +47,13 @@ class AdminDashboardScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Admin Dashboard'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.logout),
+              tooltip: 'Logout',
+              onPressed: () => _confirmLogout(context),
+            ),
+          ],
           bottom: const TabBar(
             tabs: [
               Tab(text: 'Overview'),

@@ -3,11 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../providers/data_provider.dart';
 import '../widgets/app_page_route.dart';
 import '../widgets/laborer_card.dart';
 import 'laborer_detail_screen.dart';
+import 'map_screen.dart';
 import 'post_job_screen.dart';
 
 /// Customer landing: search + skill filter chips + laborer cards.
@@ -41,6 +43,14 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
       appBar: AppBar(
         title: const Text('Rozgar Connect'),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.map),
+            tooltip: 'Nearby map',
+            onPressed: () {
+              Navigator.of(context).push(
+                  AppPageRoute(builder: (_) => const MapScreen()));
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.add),
             tooltip: 'Post a job',
@@ -105,7 +115,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
   Widget _buildList(DataProvider data) {
     if (!data.laborersLoaded && data.lastError == null) {
-      return const Center(child: CircularProgressIndicator());
+      return ListView.builder(
+        itemCount: 6,
+        itemBuilder: (context, i) => const _LoadingCard(),
+      );
     }
     if (data.lastError != null && data.laborers.isEmpty) {
       return Center(
@@ -127,6 +140,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
           final profile = data.laborers[i];
           final detail = data.detailCache[profile.laborId];
           final card = LaborerCard(
+            laborId: profile.laborId,
             name: data.laborerName(profile),
             skillNames: data.skillNamesFor(profile.laborId),
             avgRating: detail?.avgRating ?? 0,
@@ -153,6 +167,48 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               .slideY(
                   begin: 0.12, end: 0, duration: 350.ms, curve: Curves.easeOut);
         },
+      ),
+    );
+  }
+}
+
+/// Shimmer placeholder shown while laborers load — friendlier than a spinner.
+class _LoadingCard extends StatelessWidget {
+  const _LoadingCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Card(
+        margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Row(
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle, color: Colors.white),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(height: 14, width: 140, color: Colors.white),
+                    const SizedBox(height: 8),
+                    Container(height: 12, width: 200, color: Colors.white),
+                    const SizedBox(height: 8),
+                    Container(height: 12, width: 110, color: Colors.white),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -68,6 +68,9 @@ abstract class AppRepository {
 
   Future<LocationEntry?> getLatestLocation(int laborId);
 
+  /// Latest known location per laborer (for the live map).
+  Future<Map<int, LocationEntry>> getLatestLocations();
+
   Future<List<User>> getUsers();
 
   Future<void> deleteUser(int userId);

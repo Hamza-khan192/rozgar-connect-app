@@ -1,7 +1,7 @@
 name: rozgar_connect
 description: Rozgar Connect - a smart digital labor hiring & employment platform for Mardan, Pakistan.
 publish_to: 'none'
-version: 1.0.1+2
+version: 1.0.2+3
 
 environment:
   sdk: '>=3.4.0 <4.0.0'
@@ -13,6 +13,10 @@ dependencies:
   http: ^1.2.2
   shared_preferences: ^2.2.3
   flutter_animate: ^4.5.2
+  geolocator: ^13.0.2
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
